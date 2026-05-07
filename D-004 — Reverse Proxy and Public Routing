@@ -1,0 +1,23 @@
+flowchart LR
+    Internet["Internet / Users"]
+    DNS["Public DNS\n*.pitchblackeng.com"]
+    AzureDNS["Azure DNS\nDNS-01 wildcard TLS"]
+    Caddy["Caddy on debian3\n10.157.100.125\nPorts 80, 443, 2019"]
+
+    Internet --> DNS
+    DNS --> Caddy
+    Caddy --> AzureDNS
+
+    Caddy --> Chat["chat.pitchblackeng.com\nOpen WebUI\n10.157.100.48:3000"]
+    Caddy --> Grafana["grafana.pitchblackeng.com\nGrafana\n10.157.100.66:3000"]
+    Caddy --> Grid["gridcommander.pitchblackeng.com\nGridCommander\n10.157.100.76:3000"]
+    Caddy --> IMS["ims.pitchblackeng.com\nNexus alias\n10.157.100.43:8000"]
+    Caddy --> Nexus["nexus.pitchblackeng.com\nNexus\n10.157.100.43:8000"]
+    Caddy --> Outline["outline.pitchblackeng.com\nOutline\n10.157.100.125:3000"]
+    Caddy --> PIDDev["pid.pitchblackeng.com\nPID endpoint\n10.157.100.76:85"]
+    Caddy --> PID["pidextractor.pitchblackeng.com\nPID Extractor\n10.157.100.76:84"]
+    Caddy --> Search["search.pitchblackeng.com\nSearXNG\n10.157.100.141:8080"]
+    Caddy --> Speed["speed.pitchblackeng.com\nLibreSpeed\n10.157.100.72:8080"]
+
+    NPM["NPM LXC 103\nStopped / superseded"]
+    NPM -. replaced by .-> Caddy
