@@ -1,0 +1,51 @@
+flowchart TB
+    UptimeKuma["Uptime Kuma\nAzure VM\nPort 3001 Tailscale-only"]
+
+    subgraph SaaS["SaaS / Cloud Monitoring Targets"]
+        M365Health["M365 Service Health API\nGraph JSON\nServiceHealth.Read.All"]
+        SharePoint["SharePoint Online\nHTTPS"]
+        Exchange["Exchange Online\nHTTPS"]
+        Entra["Entra ID\nHTTPS"]
+        Teams["Teams\nHTTPS"]
+        Autodesk["Autodesk ACC / Accounts / Status"]
+        Bentley["Bentley ProjectWise / CONNECTION / Status"]
+        Bluebeam["Bluebeam Studio / Status"]
+        Xero["Xero"]
+        Airlock["Airlock"]
+        GitHub["GitHub"]
+        TailscaleLogin["Tailscale Coordination"]
+    end
+
+    subgraph AzureTargets["Azure Monitoring Targets"]
+        Timesheets["Timesheets\nHTTPS"]
+        NightVision["NightVision\nHTTPS"]
+        TimesheetsSQL["Timesheets Azure SQL\nTCP 1433"]
+        NightVisionSQL["NightVision Azure SQL\nTCP 1433"]
+    end
+
+    subgraph OnPrem["On-Premises Monitoring Targets"]
+        Proxmox1["Proxmox Node 1\nHTTPS 8006"]
+        Proxmox2["Proxmox Node 2\nHTTPS 8006"]
+        Proxmox3["Proxmox Node 3\nHTTPS 8006"]
+        Proxmox4["Proxmox Node 4\nHTTPS 8006"]
+        Synology["Synology NAS\nHTTPS 5001"]
+        OpenWebUI["Open WebUI\nchat.pitchblackeng.com"]
+        VLLM["vLLM\nInternal URL"]
+        Outline["Outline\noutline.pitchblackeng.com"]
+        N8N["n8n\nInternal URL"]
+        IMS["IMS Workflows\nims.pitchblackeng.com"]
+        Protege["ProtegeWX\nHTTP 10.157.110.42"]
+    end
+
+    subgraph Network["Network and DNS Targets"]
+        TPG["TPG Internet\nICMP"]
+        Aussie["Aussie Broadband\nICMP"]
+        UDM["Ubiquiti Dream Machine\nICMP"]
+        Domain1["pitchblackgroup.com.au\nDNS"]
+        Domain2["pitchblackeng.com\nDNS"]
+    end
+
+    UptimeKuma --> SaaS
+    UptimeKuma --> AzureTargets
+    UptimeKuma --> OnPrem
+    UptimeKuma --> Network
