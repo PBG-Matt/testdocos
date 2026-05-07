@@ -1,0 +1,53 @@
+erDiagram
+    }
+
+    STORAGE_TIER {
+        string tier_id
+        string provider
+        string tier_name
+        string access_profile
+        string cost_profile
+    }
+
+    RETENTION_RULE {
+        string retention_id
+        string rule_name
+        string retention_period
+        string legal_hold
+        string disposal_action
+    }
+
+    RESTORE_POINT {
+        string restore_point_id
+        datetime created_at
+        string restore_point_type
+        string status
+    }
+
+    RESTORE_TEST {
+        string test_id
+        date test_date
+        string restore_scope
+        string duration
+        string evidence_location
+    }
+
+    TEST_RESULT {
+        string result_id
+        string status
+        string issues_found
+        string remediation_required
+    }
+
+    OWNER {
+        string owner_id
+        string team
+        string contact
+    }
+
+    ALERT {
+        string alert_id
+        string alert_type
+        string severity
+        string channel
+    }
