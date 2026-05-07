@@ -1,0 +1,28 @@
+flowchart TB
+    RemoteAdmin["Remote IT/Admin Users"]
+    TailscaleCloud["Tailscale Coordination Service\nlogin.tailscale.com"]
+    AzureKuma["Uptime Kuma Azure VM\nTailscale-only service access"]
+
+    subgraph OnPrem["On-Premises Network"]
+        Router["debian3 VM 102\n10.157.100.125\nTailscale subnet router\nadvertises 10.157.100.0/24"]
+        Subnet100["10.157.100.0/24\nProxmox services"]
+        Subnet110["10.157.110.0/24\nAdditional internal services"]
+        ProxmoxNodes["Proxmox nodes\npve1-pve4 :8006"]
+        NAS["Synology NAS\nTailscale/private access"]
+        Apps["Internal apps\nOutline, IMS, Open WebUI, Grafana, etc."]
+        Protege["ProtegeWX\n10.157.110.42"]
+    end
+
+    RemoteAdmin --> TailscaleCloud
+    AzureKuma --> TailscaleCloud
+    TailscaleCloud --> Router
+    Router --> Subnet100
+    Router --> Subnet110
+    Subnet100 --> ProxmoxNodes
+    Subnet100 --> NAS
+    Subnet100 --> Apps
+    Subnet110 --> Protege
+
+    Router:::critical
+
+    classDef critical fill:#f8d7da,stroke:#842029,stroke-width:2px,color:#000;
