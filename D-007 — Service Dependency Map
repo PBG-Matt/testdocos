@@ -1,0 +1,70 @@
+flowchart TB
+    subgraph AI["AI / Search / Knowledge Services"]
+        OpenWebUI["Open WebUI\nchat.pitchblackeng.com"]
+        Ollama["Ollama\n10.157.100.141:11434"]
+        PGVector["PostgreSQL 17 + pgvector\nLXC 120"]
+        Docling["Docling\nPending deployment"]
+        SearXNG["SearXNG\nsearch.pitchblackeng.com"]
+        VLLM["vLLM\nInternal inference endpoint"]
+    end
+
+    subgraph Integration["Integration Platform"]
+        Nexus["Nexus / IMS\nnexus.pitchblackeng.com\nims.pitchblackeng.com"]
+        NexusDB["PostgreSQL\nLXC 120"]
+        Zot["Zot OCI Registry\n10.157.100.145:5000"]
+        MSGraph["Microsoft Graph"]
+        SPO["SharePoint Online"]
+        Twilio["Twilio"]
+        PowerAutomate["Power Automate"]
+        Veeam["Veeam Server\n10.157.100.3:4443"]
+    end
+
+    subgraph Wiki["Knowledge Base"]
+        Outline["Outline\noutline.pitchblackeng.com"]
+        OutlinePG["Local postgres:16\non debian3"]
+        OutlineRedis["Local redis\non debian3"]
+    end
+
+    subgraph Tools["Engineering / Internal Tools"]
+        TagCommander["TagCommander\ndebian2"]
+        GridCommander["GridCommander\ndebian2"]
+        PID["PID Extractor\ndebian2"]
+        InternalRegistry["Zot OCI Registry"]
+    end
+
+    subgraph Observability["Observability"]
+        Grafana["Grafana"]
+        Prometheus["Prometheus"]
+        Loki["Loki"]
+        Alloy["Alloy"]
+        PVEExporter["pve-exporter"]
+        ProxmoxAPI["Proxmox API\npve1-pve4"]
+    end
+
+    OpenWebUI --> Ollama
+    OpenWebUI --> PGVector
+    OpenWebUI -. pending .-> Docling
+    OpenWebUI --> SearXNG
+    OpenWebUI --> VLLM
+
+    Nexus --> NexusDB
+    Nexus --> Zot
+    Nexus --> MSGraph
+    Nexus --> SPO
+    Nexus --> Twilio
+    Nexus --> PowerAutomate
+    Nexus --> Veeam
+
+    Outline --> OutlinePG
+    Outline --> OutlineRedis
+
+    TagCommander --> InternalRegistry
+    GridCommander --> InternalRegistry
+    PID --> InternalRegistry
+
+    Grafana --> Prometheus
+    Grafana --> Loki
+    Prometheus --> PVEExporter
+    Prometheus --> Alloy
+    PVEExporter --> ProxmoxAPI
+    Alloy --> Loki
