@@ -1,12 +1,12 @@
 flowchart TB
-    Users["PBG Users\nStaff, leadership, engineers, admins"]
+    Users["PBG Users<br/>Staff, leadership, engineers, admins"]
     IT["PBG IT / Software Team"]
 
     subgraph SaaS["SaaS / Cloud Services"]
-        M365["Microsoft 365\nSharePoint, Exchange, Teams"]
-        Entra["Entra ID\nAuthentication"]
-        Autodesk["Autodesk\nACC, accounts, status"]
-        Bentley["Bentley\nProjectWise, CONNECTION"]
+        M365["Microsoft 365<br/>SharePoint, Exchange, Teams"]
+        Entra["Entra ID<br/>Authentication"]
+        Autodesk["Autodesk<br/>ACC, accounts, status"]
+        Bentley["Bentley<br/>ProjectWise, CONNECTION"]
         Bluebeam["Bluebeam Studio"]
         Xero["Xero"]
         AirlockSaaS["Airlock Digital"]
@@ -15,27 +15,28 @@ flowchart TB
     end
 
     subgraph Azure["Microsoft Azure"]
-        Timesheets["Timesheets\nAzure App Service"]
-        TimesheetsSQL["Timesheets SQL\nAzure SQL"]
-        NightVision["NightVision\nAzure Web App"]
-        NightVisionSQL["NightVision SQL\nAzure SQL"]
-        UptimeKuma["Uptime Kuma\nAzure VM, Tailscale-only"]
-        AzureDNS["Azure DNS\nDNS-01 TLS challenge"]
-        AzureStorage["Azure Blob Storage\nProposed backup/archive"]
-        AzureBackup["Azure Backup\nAirlock VM"]
+        Timesheets["Timesheets<br/>Azure App Service"]
+        TimesheetsSQL["Timesheets SQL<br/>Azure SQL"]
+        NightVision["NightVision<br/>Azure Web App"]
+        NightVisionSQL["NightVision SQL<br/>Azure SQL"]
+        UptimeKuma["Uptime Kuma<br/>Azure VM, Tailscale-only"]
+        AzureDNS["Azure DNS<br/>DNS-01 TLS challenge"]
+        AzureStorage["Azure Blob Storage<br/>Proposed backup/archive"]
+        AzureBackup["Azure Backup<br/>Airlock VM"]
     end
 
     subgraph OnPrem["Brisbane / Equinix On-Prem Environment"]
-        Proxmox["Proxmox Cluster\nbne1.pitchblackeng.com"]
-        NAS["bne1-nas-01\nSynology NAS"]
-        Caddy["Caddy Reverse Proxy\nWildcard TLS"]
-        TailscaleRouter["Tailscale Subnet Router\ndebian3"]
-        Apps["Internal Apps\nOpen WebUI, IMS/Nexus, Outline, GridCommander, PID Extractor"]
-        Monitoring["PLG Stack\nPrometheus, Loki, Grafana, Alloy"]
-        ProtegeWX["ProtegeWX\nFacilities access control"]
-        Veeam["Veeam Backup Server\nMicrosoft 365 backup"]
+        Proxmox["Proxmox Cluster<br/>bne1.pitchblackeng.com"]
+        NAS["bne1-nas-01<br/>Synology NAS"]
+        Caddy["Caddy Reverse Proxy<br/>Wildcard TLS"]
+        TailscaleRouter["Tailscale Subnet Router<br/>debian3"]
+        Apps["Internal Apps<br/>Open WebUI, IMS/Nexus, Outline, GridCommander, PID Extractor"]
+        Monitoring["PLG Stack<br/>Prometheus, Loki, Grafana, Alloy"]
+        ProtegeWX["ProtegeWX<br/>Facilities access control"]
+        Veeam["Veeam Backup Server<br/>Microsoft 365 backup"]
     end
 
+    %% User access
     Users --> M365
     Users --> Autodesk
     Users --> Bentley
@@ -45,30 +46,38 @@ flowchart TB
     Users --> NightVision
     Users --> Caddy
 
+    %% IT operations
     IT --> GitHub
     IT --> TailscaleCloud
     IT --> Proxmox
     IT --> UptimeKuma
 
+    %% Identity integration
     M365 --> Entra
     Autodesk --> Entra
     Bentley --> Entra
     AirlockSaaS --> Entra
 
+    %% Application data flow
     Timesheets --> TimesheetsSQL
     NightVision --> NightVisionSQL
 
+    %% Networking
     TailscaleCloud --> TailscaleRouter
     UptimeKuma --> TailscaleCloud
     TailscaleRouter --> Proxmox
+
+    %% On-prem workloads
     Proxmox --> Apps
     Proxmox --> Monitoring
     Proxmox --> NAS
     Proxmox --> ProtegeWX
 
+    %% Reverse proxy + DNS
     Caddy --> AzureDNS
     Caddy --> Apps
 
+    %% Backup & storage
     Veeam --> NAS
     NAS --> AzureStorage
     M365 --> Veeam
