@@ -1,0 +1,96 @@
+erDiagram
+        string location
+    }
+
+    HOST {
+        string host_id
+        string name
+        string ip_address
+        string os
+        string runtime
+        string node
+    }
+
+    WORKLOAD {
+        string workload_id
+        string name
+        string workload_type
+        string vmid
+        string runtime
+        string status
+    }
+
+    SERVICE {
+        string service_id
+        string name
+        string service_type
+        string environment
+        string status
+    }
+
+    ENDPOINT {
+        string endpoint_id
+        string hostname
+        string protocol
+        int port
+        string visibility
+    }
+
+    DATA_STORE {
+        string datastore_id
+        string name
+        string datastore_type
+        string location
+        string retention_notes
+    }
+
+    DEPENDENCY {
+        string dependency_id
+        string dependency_type
+        string impact_if_unavailable
+    }
+
+    MONITORING_TARGET {
+        string monitor_id
+        string check_type
+        string expected_result
+        string priority
+    }
+
+    BACKUP_POLICY {
+        string backup_policy_id
+        string tool
+        string schedule
+        string retention
+        string rpo
+        string rto
+    }
+
+    BACKUP_REPOSITORY {
+        string repository_id
+        string name
+        string location
+        string storage_type
+        string immutability
+    }
+
+    RESTORE_TEST {
+        string restore_test_id
+        date test_date
+        string restore_type
+        string result
+        string evidence
+    }
+
+    ALERT_ROUTE {
+        string alert_route_id
+        string channel
+        string recipient
+        string escalation
+    }
+
+    CRITICALITY {
+        string criticality_id
+        string level
+        string definition
+    }
