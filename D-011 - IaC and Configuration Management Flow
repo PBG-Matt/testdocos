@@ -1,0 +1,46 @@
+flowchart TB
+    subgraph Repo["Infrastructure Repository"]
+        Tofu["OpenTofu\nenvironments/*.tf\nflat environment"]
+        Ansible["Ansible playbooks\nansible/playbooks/*.yml"]
+        OPEnv["op.env\n1Password references only"]
+        GitHubActions["GitHub Actions\nlint.yml"]
+        State["Local OpenTofu state\ngitignored"]
+    end
+
+    subgraph Tooling["Execution Tooling"]
+        OnePasswordCLI["1Password CLI\nop run --env-file=op.env"]
+        AzureCLI["Azure CLI\naz login required"]
+        TofuCLI["tofu init / plan / apply"]
+        AnsibleProvider["Ansible provider\ntriggered during apply"]
+    end
+
+    subgraph Managed["Managed by IaC Repo"]
+        ProxmoxResources["Selected Proxmox VMs/LXCs"]
+        AlpineBootstrap["Alpine LXC SSH bootstrap\npct exec local-exec"]
+        AnsibleConfig["Configured hosts\nvia Ansible"]
+    end
+
+    subgraph Manual["Not Managed in IaC Repo"]
+        TagCommander["TagCommander\nDockge on debian2"]
+        GridCommander["GridCommander\nDockge on debian2"]
+        Outline["Outline\nDockge on debian3"]
+        Veeam["Veeam server\nexternal"]
+        DockgeStacks["Some Docker/Dockge stacks"]
+    end
+
+    GitHubActions --> Tofu
+    GitHubActions --> Ansible
+    OPEnv --> OnePasswordCLI
+    OnePasswordCLI --> TofuCLI
+    AzureCLI --> TofuCLI
+    TofuCLI --> State
+    TofuCLI --> ProxmoxResources
+    TofuCLI --> AlpineBootstrap
+    TofuCLI --> AnsibleProvider
+    AnsibleProvider --> AnsibleConfig
+
+    Manual:::manual
+    State:::risk
+
+    classDef manual fill:#e2e3e5,stroke:#41464b,stroke-width:2px,color:#000;
+    classDef risk fill:#fff3cd,stroke:#664d03,stroke-width:2px,color:#000;
