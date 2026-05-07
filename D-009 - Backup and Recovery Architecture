@@ -1,0 +1,50 @@
+flowchart TB
+    subgraph Sources["Protected / Candidate Data Sources"]
+        Leadership["Leadership mailboxes\narchive mailboxes\nOneDrive"]
+        SharePoint["SharePoint sites\nBusiness, Corporate, IT, project sites"]
+        NASData["Synology NAS shares\nProjects, CAD, Point Cloud, IT, Configuration"]
+        CAD["5-CAD share\nhourly business-hour snapshots"]
+        AirlockVM["Airlock Digital Azure VM"]
+        AirlockConfig["Airlock configuration\nApplications, baselines, blocklists, paths, publishers"]
+        AzureSQLERP["Azure SQL ERPTesting\npbg-erp-dev / pbg-erp-prod"]
+        ProxmoxVMs["Proxmox VMs/LXCs\nbackup status to confirm"]
+        ContainerVolumes["Docker/Podman volumes\nbackup status to confirm"]
+    end
+
+    subgraph Tools["Backup Tools"]
+        VeeamM365["Veeam Backup for Microsoft 365"]
+        SynologySnapshots["Synology Snapshot Replication"]
+        HyperBackup["Synology Hyper Backup"]
+        AzureBackup["Microsoft Azure Backup"]
+        DevOpsPipeline["Azure DevOps Pipeline\nconfiguration export"]
+        TBD["To be confirmed"]
+    end
+
+    subgraph Destinations["Backup Destinations"]
+        BNENAS["bne1-nas-01\nEquinix BR1\niSCSI LUN via mutual CHAP"]
+        LocalSnapshots["Local Btrfs snapshots\non bne1-nas-01"]
+        OffsiteNAS["Offsite Synology NAS\nSunshine Coast"]
+        AzureVault["Azure Backup Vault"]
+        AirlockRepo["Airlock Git repository"]
+        AzureBlob["Azure Blob Storage\nproposed"]
+        Gap["No current backup\nknown gap"]
+    end
+
+    Leadership --> VeeamM365 --> BNENAS
+    SharePoint --> VeeamM365 --> BNENAS
+    NASData --> SynologySnapshots --> LocalSnapshots
+    CAD --> SynologySnapshots --> LocalSnapshots
+    NASData --> HyperBackup --> OffsiteNAS
+    AirlockVM --> AzureBackup --> AzureVault
+    AirlockConfig --> DevOpsPipeline --> AirlockRepo
+    AzureSQLERP --> Gap
+    ProxmoxVMs --> TBD
+    ContainerVolumes --> TBD
+    BNENAS -. proposed cloud copy .-> AzureBlob
+    OffsiteNAS -. resilience layer .-> AzureBlob
+
+    Gap:::risk
+    TBD:::unknown
+
+    classDef risk fill:#f8d7da,stroke:#842029,stroke-width:2px,color:#000;
+    classDef unknown fill:#fff3cd,stroke:#664d03,stroke-width:2px,color:#000;
