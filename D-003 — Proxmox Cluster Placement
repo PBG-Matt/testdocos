@@ -1,0 +1,42 @@
+flowchart TB
+    Cluster["Proxmox Cluster\nbne1.pitchblackeng.com"]
+
+    subgraph PVE1["pve1 - 10.157.100.11"]
+        UbuntuMon["VM 104 ubuntu-mon\n10.157.100.66\nPrometheus, Loki, Grafana, pve-exporter, Alloy"]
+        LibreSpeed["LXC 108 librespeed\n10.157.100.72\nLibreSpeed"]
+    end
+
+    subgraph PVE2["pve2 - 10.157.100.12"]
+        Debian2["VM 101 debian2\n10.157.100.76\nTagCommander, GridCommander, PID Extractor, Dockge"]
+        Zot["LXC 106 zot-oci\n10.157.100.145\nInternal OCI Registry"]
+        CloudBeaver["LXC 110 cloudbeaver\nDHCP\nCloudBeaver"]
+    end
+
+    subgraph PVE3["pve3 - 10.157.100.13"]
+        Debian3["VM 102 debian3\n10.157.100.125\nTailscale router, Caddy, Outline, Dockge"]
+        Komodo["LXC 105 komodo\nDHCP\nKomodo, FerretDB, Periphery"]
+        OpenWebUI["LXC 107 openwebui\n10.157.100.48\nOpen WebUI"]
+        Nexus["LXC 109 nexus\n10.157.100.43\nIMS / Nexus"]
+        Postgres["LXC 120 postgres\nDHCP\nPostgreSQL 17 + pgvector"]
+    end
+
+    subgraph PVE4["pve4 - 10.157.100.14"]
+        Debian4["VM 100 debian4\n10.157.100.141\nOllama, SearXNG, Redis/Valkey, Dockge"]
+    end
+
+    Cluster --> PVE1
+    Cluster --> PVE2
+    Cluster --> PVE3
+    Cluster --> PVE4
+
+    OpenWebUI --> Debian4
+    OpenWebUI --> Postgres
+    Nexus --> Postgres
+    Nexus --> Zot
+    Debian2 --> Zot
+    Debian3 --> OpenWebUI
+    Debian3 --> Nexus
+    Debian3 --> Debian2
+    Debian3 --> Debian4
+    Debian3 --> UbuntuMon
+    Debian3 --> LibreSpeed
