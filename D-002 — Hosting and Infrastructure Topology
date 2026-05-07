@@ -1,0 +1,59 @@
+flowchart TB
+    subgraph Internet["Internet / Public Access"]
+        PublicDNS["Public DNS\npitchblackeng.com / pitchblackgroup.com.au"]
+        Users["Users"]
+    end
+
+    subgraph Azure["Azure"]
+        AzureAppService["Azure App Services\nTimesheets, NightVision"]
+        AzureSQL["Azure SQL\nTimesheets, NightVision, ERPTesting"]
+        AzureVM["Azure VM\nUptime Kuma"]
+        Blob["Azure Blob Storage\nProposed archive/backup"]
+        AzureDNS["Azure DNS\nDNS-01 challenge"]
+    end
+
+    subgraph SaaS["SaaS Platforms"]
+        M365["Microsoft 365"]
+        Autodesk["Autodesk"]
+        Bentley["Bentley"]
+        Bluebeam["Bluebeam"]
+        Xero["Xero"]
+        GitHub["GitHub"]
+        Airlock["Airlock"]
+        Tailscale["Tailscale Control Plane"]
+    end
+
+    subgraph OnPrem["On-Premises / Equinix BR1"]
+        subgraph Proxmox["Proxmox Cluster bne1.pitchblackeng.com"]
+            PVE1["pve1"]
+            PVE2["pve2"]
+            PVE3["pve3"]
+            PVE4["pve4"]
+        end
+        NAS["Synology NAS\nbne1-nas-01"]
+        Veeam["Veeam Backup for M365"]
+        VeeamServer["Veeam Backup Server\n10.157.100.3:4443"]
+        UDM["Ubiquiti Dream Machine"]
+        Protege["ProtegeWX\n10.157.110.42"]
+    end
+
+    Users --> PublicDNS
+    PublicDNS --> AzureAppService
+    PublicDNS --> PVE3
+
+    AzureAppService --> AzureSQL
+    AzureVM --> Tailscale
+    Tailscale --> PVE3
+
+    M365 --> Veeam
+    Veeam --> NAS
+    NAS --> Blob
+    AzureAppService --> Blob
+    AzureSQL --> Blob
+
+    PVE1 --- PVE2
+    PVE2 --- PVE3
+    PVE3 --- PVE4
+    Proxmox --> NAS
+    Proxmox --> UDM
+    UDM --> Protege
