@@ -1,0 +1,81 @@
+erDiagram
+    MONITORING_TARGET ||--o{ INCIDENT : may_create
+    SYSTEM }o--|| OWNER : owned_by
+    SYSTEM }o--|| CRITICALITY : classified_as
+    MONITORING_TARGET }o--o{ CREDENTIAL : may_require
+
+    MONITORING_SYSTEM {
+        string monitoring_system_id
+        string name
+        string hosting_location
+        string access_method
+    }
+
+    MONITORING_TARGET {
+        string monitor_id
+        string display_name
+        string category
+        string expected_result
+        string interval
+        string status
+    }
+
+    SYSTEM {
+        string system_id
+        string name
+        string business_purpose
+        string support_owner
+    }
+
+    ENDPOINT {
+        string endpoint_id
+        string url_or_host
+        string protocol
+        int port
+        string visibility
+    }
+
+    CHECK_TYPE {
+        string check_type_id
+        string type_name
+        string description
+    }
+
+    ALERT_RULE {
+        string alert_rule_id
+        string severity
+        string threshold
+        string escalation
+    }
+
+    NOTIFICATION_CHANNEL {
+        string channel_id
+        string channel_type
+        string recipient
+    }
+
+    INCIDENT {
+        string incident_id
+        datetime opened_at
+        string severity
+        string resolution_status
+    }
+
+    OWNER {
+        string owner_id
+        string owner_name
+        string team
+    }
+
+    CRITICALITY {
+        string criticality_id
+        string level
+        string description
+    }
+
+    CREDENTIAL {
+        string credential_id
+        string credential_type
+        string storage_location
+        string rotation_frequency
+    }
